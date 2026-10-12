@@ -30,3 +30,17 @@ java BankingProblem
 ```
 
 The result is saved in `answer_banking.txt`.
+
+
+## COMPILE WITH DOCKER
+-  it's required to download docker 
+After that : 
+1. create the docker image
+
+```bash
+sudo docker build -t rep-lab2 .
+```
+2. run the docker image :
+```bash
+sudo docker run --rm   --user "$(id -u):$(id -g)"   -v "$(pwd):/out"   -e OUTPUT_DIR=/out   rep-lab2
+```
