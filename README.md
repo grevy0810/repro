@@ -1,7 +1,32 @@
 # repro
+# Lab 1
 
-this repo contains a java programm to validate the percetage where (x+y)+z = x+(y+z)
+## Requirements
 
-n: 100000000
-count: 82811935
-percentaje: 82.811935
+Java must be installed on the computer.
+
+## Compile the programs
+
+Run this command in the project directory:
+
+```bash
+javac Associativity.java BankingProblem.java
+```
+
+## Run the programs
+
+For the associativity problem:
+
+```bash
+java Associativity
+```
+
+The result is saved in `answer_associativity.txt`.
+
+For the banking problem:
+
+```bash
+java BankingProblem
+```
+
+The result is saved in `answer_banking.txt`.
