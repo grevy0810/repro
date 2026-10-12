@@ -1,6 +1,9 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class BankingProblem {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         double money = Math.E;
         int years = 50;
 
@@ -9,6 +12,13 @@ public class BankingProblem {
         }
         money -= 1;
 
-        System.out.println("Money after " + years + " years: " + money + " euros");
+        
+        try (PrintWriter file = new PrintWriter(
+                new FileWriter("answer_banking.txt"))) {
+            file.println("Money after " + years + " years: "
+                    + money + " euros");
+        }
+
+        System.out.println("Results saved to answer_banking.txt");
     }
 }
