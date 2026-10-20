@@ -48,3 +48,20 @@ sudo docker run --rm   --user "$(id -u):$(id -g)"   -v "$(pwd):/out"   -e OUTPUT
 GitHub Actions
 
 GitHub Actions runs the Docker container automatically every time I push changes to the repository. It generates answer_associativity.txt and answer_banking.txt and pushes the updated files to the repository
+
+## Reproduce with Nix
+
+Install [Nix](https://nixos.org/download/), then open the project directory and enter the pinned development shell:
+
+```bash
+nix-shell
+```
+
+The shell provides the pinned nixpkgs snapshot and Java 21. Compile and run the programs with:
+
+```bash
+javac Associativity.java BankingProblem.java
+./run.sh
+```
+
+The programs write `answer_associativity.txt` and `answer_banking.txt`. The nixpkgs revision and its archive checksum are pinned in `nixpkgs-pin.nix`, so `nix-shell` uses the same package catalog across machines.
