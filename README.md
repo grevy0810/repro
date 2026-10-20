@@ -44,3 +44,7 @@ sudo docker build -t rep-lab2 .
 ```bash
 sudo docker run --rm   --user "$(id -u):$(id -g)"   -v "$(pwd):/out"   -e OUTPUT_DIR=/out   rep-lab2
 ```
+
+GitHub Actions
+
+GitHub Actions runs the Docker container automatically every time I push changes to the repository. It generates answer_associativity.txt and answer_banking.txt and pushes the updated files to the repository
