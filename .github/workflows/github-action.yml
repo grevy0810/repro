@@ -1,0 +1,38 @@
+
+name: Generate Answers
+
+on:
+  push:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t rep-lab2 .
+
+      - name: Run Docker container
+        run: |
+          docker run --rm   --user "$(id -u):$(id -g)"   -v "$(pwd):/out"   -e OUTPUT_DIR=/out   rep-lab2
+
+      - name: Commit and push answers
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add answer_associativity.txt answer_banking.txt
+
+          if git diff --cached --quiet; then
+            echo "No answer changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Update generated answers"
+          git push
