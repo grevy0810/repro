@@ -1,3 +1,0 @@
-Number of tests: 100000000
-Equal results: 82818225
-Percentage: 82.818225%

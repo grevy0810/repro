@@ -1,5 +1,0 @@
-Initial money: 2.718281828459045
-Years: 50
-Annual operation: (money - 1) * n
-Final withdrawal fee: 1 euro
-Final money: -4.3968039301820685e+48 euros
