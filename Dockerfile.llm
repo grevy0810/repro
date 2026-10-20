@@ -1,0 +1,8 @@
+
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY associativity.py banking.py ./
+
+CMD ["sh", "-c", "python associativity.py && python banking.py"]
