@@ -1,0 +1,7 @@
+Tests: 1000000
+Equal results: 924212
+Percentage: 92.4212%
+Language: Python 3
+Random seed: 42
+Range: [-1e16, 1e16]
+Comparison: exact floating-point equality
