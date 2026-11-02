@@ -1,0 +1,36 @@
+name: Distributivity Test
+
+on:
+  push:
+    branches:
+      - property-distributivity
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: tp3
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Compile
+        run: javac Distributivity.java
+
+      - name: Run experiment
+        run: java Distributivity
+
+      - name: Display results
+        run: cat answer_distributivity.txt
