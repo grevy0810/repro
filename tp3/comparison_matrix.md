@@ -11,3 +11,19 @@
 - Lab #1 and Lab #3 show that two Java implementations can produce different results because of their implementation choices.
 - Lab #2 and Lab #3 produce very similar results (92.4212% and 92.4047%), despite using different programming languages.
 - This suggests that the value range and other experimental parameters have a strong influence on the results.
+
+
+
+## Part 2 — Mathematical property
+
+A new branch called `property-distributivity` was created.
+
+The original program was modified to test distributivity instead of associativity:
+
+`x * (y + z) == x * y + x * z`
+
+The other main implementation choices were kept the same.
+
+GitHub Actions was used to compile and execute the program automatically.
+
+The results show that the mathematical property being tested is also a variability factor.
