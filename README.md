@@ -1,67 +1,50 @@
-# repro
-# Lab 1
+# Reproducibility lab
 
-## Requirements
+The repository keeps the Java exercises in `tp1/` and the LLM-generated Python exercises and prompts in `tp2/llm/`. Generated answers are saved beside the corresponding exercise files.
 
-Java must be installed on the computer.
+## TP1 (Java)
 
-## Compile the programs
-
-Run this command in the project directory:
+From the repository root, compile and run the programs with Java 21 or later:
 
 ```bash
-javac Associativity.java BankingProblem.java
+javac tp1/Associativity.java tp1/BankingProblem.java
+./tp1/run.sh
 ```
 
-## Run the programs
+The output files are `tp1/answer_associativity.txt` and `tp1/answer_banking.txt`.
 
-For the associativity problem:
+To run TP1 in Docker:
 
 ```bash
-java Associativity
+docker build -f tp1/Dockerfile -t rep-lab2 .
+docker run --rm --user "$(id -u):$(id -g)" \
+  -v "$(pwd):/out" -e OUTPUT_DIR=/out/tp1 rep-lab2
 ```
 
-The result is saved in `answer_associativity.txt`.
+## TP2 (LLM / Python)
 
-For the banking problem:
+The prompts, Python programs, and generated answers are in `tp2/llm/`. Run them from the repository root with:
 
 ```bash
-java BankingProblem
+python3 tp2/llm/associativity.py
+python3 tp2/llm/banking.py
 ```
 
-The result is saved in `answer_banking.txt`.
-
-
-## COMPILE WITH DOCKER
--  it's required to download docker 
-After that : 
-1. create the docker image
+To run TP2 in Docker:
 
 ```bash
-sudo docker build -t rep-lab2 .
-```
-2. run the docker image :
-```bash
-sudo docker run --rm   --user "$(id -u):$(id -g)"   -v "$(pwd):/out"   -e OUTPUT_DIR=/out   rep-lab2
+docker build -f tp2/llm/Dockerfile.llm -t rep-lab2-llm .
+docker run --rm --user "$(id -u):$(id -g)" \
+  -v "$(pwd):/out" -e OUTPUT_DIR=/out/tp2/llm rep-lab2-llm
 ```
 
-GitHub Actions
+## Reproduce TP1 with Nix
 
-GitHub Actions runs the Docker container automatically every time I push changes to the repository. It generates answer_associativity.txt and answer_banking.txt and pushes the updated files to the repository
-
-## Reproduce with Nix
-
-Install [Nix](https://nixos.org/download/), then open the project directory and enter the pinned development shell:
+Install [Nix](https://nixos.org/download/), enter the project directory, and start the pinned development shell:
 
 ```bash
 nix-shell
+javac tp1/Associativity.java tp1/BankingProblem.java
+./tp1/run.sh
 ```
 
-The shell provides the pinned nixpkgs snapshot and Java 21. Compile and run the programs with:
-
-```bash
-javac Associativity.java BankingProblem.java
-./run.sh
-```
-
-The programs write `answer_associativity.txt` and `answer_banking.txt`. The nixpkgs revision and its archive checksum are pinned in `nixpkgs-pin.nix`, so `nix-shell` uses the same package catalog across machines.

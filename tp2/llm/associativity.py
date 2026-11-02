@@ -1,7 +1,7 @@
 import os
 import random
 
-output_dir = os.getenv("OUTPUT_DIR", ".")
+output_dir = os.getenv("OUTPUT_DIR", os.path.dirname(os.path.abspath(__file__)))
 os.makedirs(output_dir, exist_ok=True)
 
 random.seed(42)
