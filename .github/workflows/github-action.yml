@@ -15,6 +15,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Python for TP3 sampling
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Flamapy
+        run: python -m pip install -r tp3/requirements.txt
+
+      - name: Sample TP3 configurations
+        working-directory: tp3
+        run: |
+          python sample.py fm/experiment.uvl \
+            --size 30 \
+            --seed 1 \
+            --include configs/tp1_original.csvconf \
+                      configs/tp2_llm_python.csvconf \
+                      configs/tp3_llm_java.csvconf \
+            -o configs/sample.csv
+
       - name: Build Docker image
         run: docker build -f tp1/Dockerfile -t rep-lab2 .
 
@@ -39,7 +58,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add tp1/answer_associativity.txt tp1/answer_banking.txt \
-          tp2/llm/answer_associativity_llm.txt tp2/llm/answer_banking_llm.txt
+          tp2/llm/answer_associativity_llm.txt tp2/llm/answer_banking_llm.txt \
+          tp3/configs/sample.csv
 
           if git diff --cached --quiet; then
             echo "No answer changes to commit."
