@@ -1,0 +1,7 @@
+Tests: 1000000
+Equal results: 923665
+Percentage: 92.3665%
+Language: Java
+Random seed: 123
+Range: [-1.0E16, 1.0E16)
+Comparison: exact floating-point equality

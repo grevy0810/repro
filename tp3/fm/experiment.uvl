@@ -1,0 +1,52 @@
+
+features
+    FloatingPointExperiment
+        mandatory
+            Language
+                alternative
+                    Java
+                    Python
+
+            Implementation
+                alternative
+                    Original
+                    LLMGenerated
+
+            Property
+                alternative
+                    AdditionAssociativity
+                    MultiplicationAssociativity
+                    Distributivity
+
+            NumberType
+                alternative
+                    Float
+                    Double
+
+            Repetitions
+                alternative
+                    Tests_1M
+                    Tests_100M
+
+            RandomSeed
+                alternative
+                    Seed_42
+                    Seed_123
+                    Seed_NotDocumented
+
+            NumberRange
+                alternative
+                    Range_Symmetric_1e16
+                    Range_UnitInterval
+                    Range_NotDocumented
+
+            UpperBound
+                alternative
+                    Inclusive
+                    Exclusive
+                    NotDocumented
+
+            ExactEquality
+
+constraints
+    Original => Java
