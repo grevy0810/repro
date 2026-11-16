@@ -100,4 +100,15 @@ jobs:
             exit 0
           fi
           git commit -m "Update TP3 sampled experiment results"
-          git push
+
+          for attempt in 1 2 3; do
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              echo "Push failed after $attempt attempts."
+              exit 1
+            fi
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase "origin/${GITHUB_REF_NAME}"
+          done
