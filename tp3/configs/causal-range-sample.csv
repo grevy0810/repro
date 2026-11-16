@@ -1,0 +1,3 @@
+config_id,origin_of_config,Language,Implementation,Property,NumberType,Repetitions,RandomSeed,NumberRange,UpperBound
+causal_range_unit,controlled,Java,Original,AdditionAssociativity,Double,Tests_1M,Seed_42,Range_UnitInterval,Exclusive
+causal_range_symmetric,controlled,Java,Original,AdditionAssociativity,Double,Tests_1M,Seed_42,Range_Symmetric_1e16,Exclusive

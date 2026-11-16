@@ -90,6 +90,32 @@ generator, seed, and exact command are recorded in each result row;
 cross-language runs are not expected to use identical random sequences.
 The Java worker uses Java `float` and `double` respectively.
 
+## Part 8: analyze results
+
+Install the notebook dependencies and open `analyze_results.ipynb` in Jupyter
+or VS Code:
+
+```bash
+python -m pip install -r requirements-analysis.txt
+jupyter lab analyze_results.ipynb
+```
+
+Run all cells from a clean kernel. The notebook reads `configs/results.csv` and
+`configs/causal-range-results.csv`; it does not generate or modify experiment
+data. The controlled range comparison is run separately:
+
+```bash
+.venv/bin/python run_sample.py \
+  --sample configs/causal-range-sample.csv \
+  --output configs/causal-range-results.csv \
+  --runs 3
+```
+
+The notebook summarizes effects across sampled configurations, shows a shallow
+decision tree as a descriptive aid, compares the TP1/TP2/TP3 anchor results,
+and analyzes the paired range experiment. Observational comparisons are not
+interpreted as causal effects.
+
 ## Part 7: run the experiment matrix in GitHub Actions
 
 The workflow runs on pushes that change `tp3/` and can also be started
