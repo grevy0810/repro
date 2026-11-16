@@ -51,8 +51,8 @@ cmp /tmp/sample-first.csv configs/sample.csv
 
 `sample.py` fixes `PYTHONHASHSEED` for Flamapy's sampling process so the
 combination of the same model, command, and seed yields the same CSV.
-The existing GitHub Actions workflow runs this same sampling command and
-commits the generated CSV when it changes.
+The [TP3 GitHub Actions workflow](../.github/workflows/tp3-experiments.yml)
+runs this same sampling command as part of the end-to-end experiment.
 
 ## Part 6: serialize experiment results
 
@@ -75,7 +75,7 @@ configurations remain comparable.
 
 Each result row includes the original factors, the effective values used by
 the worker, the run number, answer count and percentage, exact command,
-language runtime version, platform, and duration. For documented seeds, the
+language runtime version, and runner/matrix versions. For documented seeds, the
 three runs use the configured seed followed by the next two integers.
 `Seed_NotDocumented` gets a deterministic seed derived from the configuration
 ID and run number. Missing ranges and endpoint choices use the historical
@@ -89,3 +89,20 @@ practical to execute. The Java worker uses `java.util.Random`. The random
 generator, seed, and exact command are recorded in each result row;
 cross-language runs are not expected to use identical random sequences.
 The Java worker uses Java `float` and `double` respectively.
+
+## Part 7: run the experiment matrix in GitHub Actions
+
+The workflow runs on pushes that change `tp3/` and can also be started
+manually with **Actions → TP3 variability experiments → Run workflow**. Its
+matrix combines Python 3.11/3.12 with Java 21/25 on `ubuntu-24.04`. Each job
+regenerates the same seeded sample, runs all configurations, and uploads its
+CSV. A final job merges the four files into `configs/results.csv` and commits
+the sample and results. The legacy workflow continues to produce TP1/TP2
+answers; it no longer samples TP3.
+
+To check a rerun of the same commit, compare the answer columns
+(`config_id`, `run_index`, the two matrix version columns, `answer_equal_count`,
+and `answer_percentage`) in the generated CSV. With the same tool versions and
+seed, the numerical results should be identical. The CSV also records exact
+runtime versions and the runner, so a hosted runner image update may change
+metadata even when the answers remain the same.

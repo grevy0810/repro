@@ -5,9 +5,7 @@ import argparse
 import csv
 import hashlib
 import json
-import os
 import platform
-import shlex
 import subprocess
 import sys
 import time
@@ -20,7 +18,6 @@ ROOT = Path(__file__).resolve().parent
 SAMPLE = ROOT / "configs" / "sample.csv"
 OUTPUT = ROOT / "configs" / "results.csv"
 JAVA_SOURCE = ROOT / "JavaSampleExperiment.java"
-JAVA_CLASS = ROOT / "JavaSampleExperiment.class"
 PYTHON_WORKER = ROOT / "PythonSampleExperiment.py"
 REQUIRED_COLUMNS = {
     "config_id",
@@ -42,6 +39,9 @@ def options():
     parser.add_argument("--output", type=Path, default=OUTPUT)
     parser.add_argument("--runs", type=int, default=3, help="repetitions per configuration")
     parser.add_argument("--limit", type=int, help="run only the first N configurations (for a smoke test)")
+    parser.add_argument("--matrix-python-version", default="local")
+    parser.add_argument("--matrix-java-version", default="local")
+    parser.add_argument("--runner", default="local")
     return parser.parse_args()
 
 
@@ -202,9 +202,10 @@ def main():
         "answer_percentage",
         "random_generator",
         "runtime_version",
-        "platform",
+        "runner",
+        "matrix_python_version",
+        "matrix_java_version",
         "command",
-        "duration_seconds",
     ]
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -229,9 +230,10 @@ def main():
                     "answer_percentage": answer["percentage"],
                     "random_generator": "NumPy MT19937" if row["Language"] == "Python" else "java.util.Random",
                     "runtime_version": runtime_version(row["Language"]),
-                    "platform": platform.platform(),
+                    "runner": args.runner,
+                    "matrix_python_version": args.matrix_python_version,
+                    "matrix_java_version": args.matrix_java_version,
                     "command": json.dumps(command),
-                    "duration_seconds": f"{elapsed:.6f}",
                 })
                 file.flush()
                 count += 1

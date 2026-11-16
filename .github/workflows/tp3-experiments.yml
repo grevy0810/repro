@@ -1,0 +1,103 @@
+name: TP3 variability experiments
+
+on:
+  push:
+    paths:
+      - "tp3/**"
+      - ".github/workflows/tp3-experiments.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  experiment:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+        java-version: ["21", "25"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java-version }}
+
+      - name: Install experiment dependencies
+        run: python -m pip install -r tp3/requirements.txt
+
+      - name: Generate reproducible sample
+        working-directory: tp3
+        run: |
+          python sample.py fm/experiment.uvl \
+            --size 30 \
+            --seed 1 \
+            --include configs/tp1_original.csvconf \
+                      configs/tp2_llm_python.csvconf \
+                      configs/tp3_llm_java.csvconf \
+            -o configs/sample.csv
+
+      - name: Derive and run sampled configurations
+        working-directory: tp3
+        run: |
+          python run_sample.py \
+            --matrix-python-version "${{ matrix.python-version }}" \
+            --matrix-java-version "${{ matrix.java-version }}" \
+            --runner ubuntu-24.04 \
+            --output "configs/results-python-${{ matrix.python-version }}-java-${{ matrix.java-version }}.csv"
+
+      - name: Upload environment results
+        uses: actions/upload-artifact@v4
+        with:
+          name: tp3-results-python-${{ matrix.python-version }}-java-${{ matrix.java-version }}
+          path: tp3/configs/results-python-${{ matrix.python-version }}-java-${{ matrix.java-version }}.csv
+          if-no-files-found: error
+
+  collect-and-commit:
+    if: github.actor != 'github-actions[bot]'
+    needs: experiment
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Download matrix results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: tp3-results-*
+          path: tp3/configs/matrix-results
+          merge-multiple: true
+
+      - name: Merge results
+        run: |
+          python tp3/merge_results.py tp3/configs/matrix-results \
+            --output tp3/configs/results.csv
+
+      - name: Commit sample and results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tp3/configs/sample.csv tp3/configs/results.csv
+          if git diff --cached --quiet; then
+            echo "Sample and experiment results are unchanged."
+            exit 0
+          fi
+          git commit -m "Update TP3 sampled experiment results"
+          git push
