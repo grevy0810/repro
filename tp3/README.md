@@ -1,8 +1,26 @@
-# TP3 — Part 5: reproducible sampling
+# TP3 — Reproducible variability experiment
 
-`sample.py` draws valid configurations from `fm/experiment.uvl`. The three
-`.csvconf` files in `configs/` add the implementations from TP1, TP2, and TP3
-as anchor configurations, so they are always present in the sample.
+TP3 studies how implementation choices and runtime environments affect
+floating-point results. It samples configurations from a feature model, runs
+each configuration repeatedly, and analyzes the recorded results.
+
+## Architecture
+
+- `fm/experiment.uvl` defines the factors and valid combinations.
+- `configs/*.csvconf` define the TP1, TP2, and TP3 anchor configurations;
+  `configs/sample.csv` and the results CSVs contain generated data.
+- `sample.py` samples valid configurations and writes the sample CSV.
+- `run_sample.py` derives the effective settings, compiles the Java worker as
+  needed, runs the Java or Python worker, and records the results and execution
+  metadata.
+- `JavaSampleExperiment.java` and `PythonSampleExperiment.py` implement the
+  instrumented floating-point experiments.
+- `merge_results.py` merges the per-environment CSV files produced by the
+  GitHub Actions matrix.
+- `analyze_results.ipynb` reads the result CSVs and produces descriptive
+  comparisons; it does not generate or modify experiment data.
+- `.github/workflows/tp3-experiments.yml` runs the seeded sample across a
+  Python/Java version matrix and commits the merged sample and results.
 
 ## Reproduce the sample
 
@@ -132,3 +150,10 @@ and `answer_percentage`) in the generated CSV. With the same tool versions and
 seed, the numerical results should be identical. The CSV also records exact
 runtime versions and the runner, so a hosted runner image update may change
 metadata even when the answers remain the same.
+
+## AI usage statement
+
+The TP2 anchor represents the LLM-generated implementation from `tp2/llm/`.
+TP3 models this implementation as one of the historical implementations under
+study; its sampling, execution, result merging, and analysis scripts do not
+make LLM calls.

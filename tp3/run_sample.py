@@ -121,8 +121,8 @@ def run_configuration(row, parameters):
     common = [
         "--tests", str(parameters["repetitions"]),
         "--seed", str(parameters["seed"]),
-        "--min", repr(parameters["minimum"]),
-        "--max", repr(parameters["maximum"]),
+        f"--min={parameters['minimum']!r}",
+        f"--max={parameters['maximum']!r}",
         "--type", row["NumberType"],
         "--property", row["Property"],
     ]
