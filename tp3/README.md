@@ -6,21 +6,61 @@ each configuration repeatedly, and analyzes the recorded results.
 
 ## Architecture
 
-- `fm/experiment.uvl` defines the factors and valid combinations.
-- `configs/*.csvconf` define the TP1, TP2, and TP3 anchor configurations;
-  `configs/sample.csv` and the results CSVs contain generated data.
+The files are organized into the following stages and supporting materials:
+
+### Experiment definition and documentation
+
+- `fm/experiment.uvl` defines the factors and valid feature combinations.
+- `list_possible_factors.md` records candidate variability factors.
+- `steps.md` contains the lab instructions and the workflow from initial
+  experiments through analysis.
+- `comparison_matrix.md` documents the original programs and their observed
+  results.
+- `README.md` documents how to reproduce the TP3 sample, experiment, and
+  analysis.
+
+### Implementations and experiment tools
+
+- `AssociativityCLI.java` is the configurable Java CLI experiment;
+  `run_experiments.sh` runs it over a set of seed and range values.
+- `AssociativityRuntime.java` explores how results vary with the number of
+  repetitions.
+- `experiment.java.jinja` is the Java source template, and `generate.py`
+  renders, compiles, and executes the generated implementations.
+- `generated/AssociativityFloat.java`, `generated/AssociativityDouble.java`,
+  `generated/DistributivityFloat.java`, and
+  `generated/DistributivityDouble.java` are the generated template examples.
+- `llm/AssociativityLLM.java` is the LLM-generated Java implementation.
+  `llm/llm.md` records its prompt/model information, and
+  `llm/answer_associativity_llm_java.txt` is its recorded output.
+- `answer_associativity_llm_java.txt` is the output from the configurable CLI
+  experiment.
+- `JavaSampleExperiment.java` and `PythonSampleExperiment.py` are the
+  instrumented workers used by the sampled experiment.
 - `sample.py` samples valid configurations and writes the sample CSV.
-- `run_sample.py` derives the effective settings, compiles the Java worker as
-  needed, runs the Java or Python worker, and records the results and execution
-  metadata.
-- `JavaSampleExperiment.java` and `PythonSampleExperiment.py` implement the
-  instrumented floating-point experiments.
-- `merge_results.py` merges the per-environment CSV files produced by the
-  GitHub Actions matrix.
+  `run_sample.py` derives their effective settings, compiles/runs the matching
+  worker, and records results and execution metadata.
+- `merge_results.py` merges per-environment result CSVs from the Actions
+  matrix.
+
+### Configurations, data, and analysis
+
+- `configs/tp1_original.csvconf`, `configs/tp2_llm_python.csvconf`, and
+  `configs/tp3_llm_java.csvconf` define the three anchor configurations.
+- `configs/sample.csv` is the generated seeded sample;
+  `configs/results.csv` contains the merged matrix results.
+- `configs/causal-range-sample.csv` defines the controlled range comparison,
+  and `configs/causal-range-results.csv` contains its recorded results.
 - `analyze_results.ipynb` reads the result CSVs and produces descriptive
   comparisons; it does not generate or modify experiment data.
-- `.github/workflows/tp3-experiments.yml` runs the seeded sample across a
-  Python/Java version matrix and commits the merged sample and results.
+
+### Dependencies and automation
+
+- `requirements.txt` pins the sampling and experiment dependencies.
+- `requirements-analysis.txt` lists the notebook analysis dependencies.
+- The [TP3 GitHub Actions workflow](../.github/workflows/tp3-experiments.yml)
+  regenerates the seeded sample, runs it across the Python/Java version
+  matrix, merges the results, and commits the sample and merged data.
 
 ## Reproduce the sample
 
